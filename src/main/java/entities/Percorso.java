@@ -18,6 +18,44 @@ import java.time.LocalDateTime;
         @ManyToOne
         private Tratta tratta;
 
-        // Getters and Setters
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public LocalDateTime getOrarioPartenza() {
+            return orarioPartenza;
+        }
+
+        public void setOrarioPartenza(LocalDateTime orarioPartenza) {
+            this.orarioPartenza = orarioPartenza;
+        }
+
+        public LocalDateTime getOrarioArrivo() {
+            return orarioArrivo;
+        }
+
+        public void setOrarioArrivo(LocalDateTime orarioArrivo) {
+            this.orarioArrivo = orarioArrivo;
+        }
+
+        public Mezzo getMezzo() {
+            return mezzo;
+        }
+
+        public void setMezzo(Mezzo mezzo) {
+            this.mezzo = mezzo;
+        }
+
+        public Tratta getTratta() {
+            return tratta;
+        }
+
+        public void setTratta(Tratta tratta) {
+            this.tratta = tratta;
+        }
     }
 
