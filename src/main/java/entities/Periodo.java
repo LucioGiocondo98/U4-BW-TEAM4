@@ -1,8 +1,8 @@
 package entities;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
+import Enumerated.StatoMezzo;
 
 @Entity
 @Table
