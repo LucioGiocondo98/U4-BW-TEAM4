@@ -1,7 +1,7 @@
 package entities;
 
 import jakarta.persistence.*;
-
+import Enumerated.TipoMezzo;
 @Entity
 @Table
 public class Mezzo {
