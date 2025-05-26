@@ -56,3 +56,4 @@ public class Tratta {
         this.capolinea = capolinea;
     }
 }
+
