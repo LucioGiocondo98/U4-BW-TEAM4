@@ -8,10 +8,13 @@ import java.util.List;
 @Entity
 @Table(name = "utenti")
 public class Utente {
+    @Id
+    @GeneratedValue
+    protected Long id;
     protected String nome;
     protected String cognome;
-    @Id
-    @Column(name ="numero_di_tessera")
+    @OneToOne
+    @JoinColumn(name ="tessera_id",referencedColumnName = "id",unique = true)
     protected Tessera numeroTessera;
     @OneToMany(mappedBy = "utente")
     protected List<Biglietto> biglietti;
