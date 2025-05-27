@@ -9,8 +9,8 @@ public class Biglietto extends TitoloDiViaggio{
     private boolean vidimato;
     @Column(name = "data_di_vidimazione")
     private LocalDate dataVidimazione;
-//    @ManyToOne
-//    @JoinColumn(name ="utente_id" )
+    @ManyToOne
+    @JoinColumn(name ="utente_id" )
    private Utente utente;
 
     public Biglietto(String codiceUnivoco, LocalDate dataEmissione, boolean vidimato, LocalDate dataVidimazione) {
