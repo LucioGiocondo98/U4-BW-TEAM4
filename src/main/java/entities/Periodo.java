@@ -1,6 +1,6 @@
 package entities;
 
-import Enumerated.StatoMezzo;
+
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -22,8 +22,7 @@ public class Periodo {
     public Periodo(){
     }
 
-    public Periodo(int id, int mezzo, StatoMezzo statoMezzo, LocalDate inizioPeriodo, LocalDate finePeriodo) {
-        this.id = id;
+    public Periodo( Mezzo mezzo, StatoMezzo statoMezzo, LocalDate inizioPeriodo, LocalDate finePeriodo) {
         this.mezzo = mezzo;
         this.statoMezzo = statoMezzo;
         this.inizioPeriodo = inizioPeriodo;
@@ -38,11 +37,11 @@ public class Periodo {
         this.id = id;
     }
 
-    public int getMezzo() {
+    public Mezzo getMezzo() {
         return mezzo;
     }
 
-    public void setMezzo(int mezzo) {
+    public void setMezzo(Mezzo mezzo) {
         this.mezzo = mezzo;
     }
 
