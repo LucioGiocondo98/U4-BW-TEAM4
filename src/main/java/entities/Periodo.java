@@ -1,8 +1,8 @@
 package entities;
 
+import Enumerated.StatoMezzo;
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import Enumerated.StatoMezzo;
 
 @Entity
 @Table
@@ -13,7 +13,7 @@ public class Periodo {
     private int id;
     @ManyToOne
     @JoinColumn(name="mezzo_id")
-    private int mezzo;
+    private Mezzo mezzo;
     @Enumerated(value = EnumType.STRING)
     private StatoMezzo statoMezzo;
     private LocalDate inizioPeriodo;
