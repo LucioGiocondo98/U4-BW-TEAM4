@@ -1,8 +1,8 @@
 package entities;
 
+
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import Enumerated.StatoMezzo;
 
 @Entity
 @Table
@@ -13,7 +13,7 @@ public class Periodo {
     private int id;
     @ManyToOne
     @JoinColumn(name="mezzo_id")
-    private int mezzo;
+    private Mezzo mezzo;
     @Enumerated(value = EnumType.STRING)
     private StatoMezzo statoMezzo;
     private LocalDate inizioPeriodo;
@@ -22,8 +22,7 @@ public class Periodo {
     public Periodo(){
     }
 
-    public Periodo(int id, int mezzo, StatoMezzo statoMezzo, LocalDate inizioPeriodo, LocalDate finePeriodo) {
-        this.id = id;
+    public Periodo( Mezzo mezzo, StatoMezzo statoMezzo, LocalDate inizioPeriodo, LocalDate finePeriodo) {
         this.mezzo = mezzo;
         this.statoMezzo = statoMezzo;
         this.inizioPeriodo = inizioPeriodo;
@@ -38,11 +37,11 @@ public class Periodo {
         this.id = id;
     }
 
-    public int getMezzo() {
+    public Mezzo getMezzo() {
         return mezzo;
     }
 
-    public void setMezzo(int mezzo) {
+    public void setMezzo(Mezzo mezzo) {
         this.mezzo = mezzo;
     }
 

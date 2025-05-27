@@ -1,7 +1,10 @@
 package entities;
 
 import jakarta.persistence.*;
-import Enumerated.TipoMezzo;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table
 public class Mezzo {
@@ -12,14 +15,19 @@ public class Mezzo {
     @Enumerated(value = EnumType.STRING)
     private TipoMezzo tipomezzo;
     private int capienza;
+    @OneToMany(mappedBy = "mezzo")
+    private List<Periodo> periodi=new ArrayList<>();
 
     public Mezzo(){
     }
 
-    public Mezzo(int id, TipoMezzo tipomezzo, int capienza) {
-        this.id = id;
+    public Mezzo( TipoMezzo tipomezzo, int capienza) {
         this.tipomezzo = tipomezzo;
-        this.capienza = capienza;
+        switch (tipomezzo) {
+            case AUTOBUS -> this.capienza = 50;
+            case TRAM -> this.capienza = 100;
+            default -> throw new IllegalArgumentException("Tipo mezzo non gestito");
+        }
     }
 
     public int getId() {
@@ -42,8 +50,8 @@ public class Mezzo {
         return capienza;
     }
 
-    public void setCapienza(int capienza) {
-        this.capienza = capienza;
+    public List<Periodo> getPeriodi() {
+        return periodi;
     }
 
     @Override

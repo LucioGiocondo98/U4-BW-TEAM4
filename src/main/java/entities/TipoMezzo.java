@@ -1,4 +1,4 @@
-package Enumerated;
+package entities;
 
 public enum TipoMezzo {
     TRAM,AUTOBUS
