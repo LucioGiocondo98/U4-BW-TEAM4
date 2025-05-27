@@ -1,9 +1,6 @@
 package entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -13,8 +10,9 @@ public  abstract  class TitoloDiViaggio {
   private  String codiceUnivoco;
     @Column(name = "data_emissione")
   private LocalDate dataEmissione;
-//    @ManyToOne
-//  private PuntoEmissione puntoEmissione;
+    @ManyToOne
+    @JoinColumn(name = "titoliEmissione")
+  private PuntoEmissione puntoEmissione;
 
 
     public TitoloDiViaggio(String codiceUnivoco, LocalDate dataEmissione) {

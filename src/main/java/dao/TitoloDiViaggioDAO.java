@@ -2,6 +2,11 @@ package dao;
 
 import entities.TitoloDiViaggio;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.TimerTask;
 
 public class TitoloDiViaggioDAO {
     private EntityManager em;
@@ -35,8 +40,18 @@ public class TitoloDiViaggioDAO {
         }
             else {
             System.out.println("nessun Titolo Di Viaggio con codice univoco "+ codiceUnivoco +" è stato trovato");
-            
+
         }
+
+    }
+    public List<Object[]> numeroTitoliPerPuntoInPeriodo(LocalDate inizio, LocalDate fine) {
+        TypedQuery<Object[]> query = em.createQuery(
+                "SELECT t.puntoEmissione, count(t) from TitoloDiViaggio t where dataEmissione between :inizio and :fine group by t.puntoEmissione",
+                Object[].class
+        );
+        query.setParameter("inizio", inizio);
+        query.setParameter("fine", fine);
+        return query.getResultList();
 
     }
 }
