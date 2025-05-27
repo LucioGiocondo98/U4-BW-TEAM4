@@ -13,6 +13,7 @@ public abstract class PuntoEmissione {
     private int id;
 
 
+    @ManyToOne
     private List<TitoloDiViaggio> titoliEmissione;
 
     public PuntoEmissione() {
