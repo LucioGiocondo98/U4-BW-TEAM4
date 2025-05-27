@@ -17,19 +17,19 @@ public class Tessera {
     protected LocalDate dataScadenza;
     protected boolean attiva;
 
-    public Tessera(long id, LocalDate dataEmissione, LocalDate dataScadenza, boolean attiva) {
+    public Tessera(long id, LocalDate dataEmissione, boolean attiva) {
         this.id = id;
         this.dataEmissione = dataEmissione;
-        this.dataScadenza = dataScadenza;
+        this.dataScadenza = dataEmissione.plusYears(1);
         this.attiva = attiva;
     }
     public Tessera(){}
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -56,5 +56,14 @@ public class Tessera {
     public void setAttiva(boolean attiva) {
         this.attiva = attiva;
     }
+    public boolean isValida() {
+        return attiva && (dataScadenza == null || !LocalDate.now().isAfter(dataScadenza));
+    }
+    public void rinnova() {
+        this.dataEmissione = LocalDate.now();
+        this.dataScadenza = this.dataEmissione.plusYears(1);
+        this.attiva = true;
+    }
+
 }
 
