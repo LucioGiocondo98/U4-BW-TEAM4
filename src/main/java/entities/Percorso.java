@@ -1,45 +1,71 @@
 package entities;
 
-import entities.Percorso;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
-public class PercorsoDAO {
+@Entity
+public class Percorso {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private EntityManager em;
+    private LocalDateTime orarioPartenza;
+    private LocalDateTime orarioArrivo;
 
-    public PercorsoDAO(EntityManager em) {
-        this.em = em;
+    @ManyToOne
+    private Mezzo mezzo;
+
+    @ManyToOne
+    private Tratta tratta;
+
+    public Long getId() {
+        return id;
     }
 
-    public void save(Percorso percorso) {
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.persist(percorso);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
-            e.printStackTrace();
-        }
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Percorso findById(Long id) {
-        return em.find(Percorso.class, id);
+    public Tratta getTratta() {
+        return tratta;
     }
 
-    public void delete(Long id) {
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            Percorso percorso = em.find(Percorso.class, id);
-            if (percorso != null) {
-                em.remove(percorso);
-            }
-            tx.commit();
-        } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
-            e.printStackTrace();
-        }
+    public void setTratta(Tratta tratta) {
+        this.tratta = tratta;
+    }
+
+    public Mezzo getMezzo() {
+        return mezzo;
+    }
+
+    public void setMezzo(Mezzo mezzo) {
+        this.mezzo = mezzo;
+    }
+
+    public LocalDateTime getOrarioPartenza() {
+        return orarioPartenza;
+    }
+
+    public void setOrarioPartenza(LocalDateTime orarioPartenza) {
+        this.orarioPartenza = orarioPartenza;
+    }
+
+    public LocalDateTime getOrarioArrivo() {
+        return orarioArrivo;
+    }
+
+    public void setOrarioArrivo(LocalDateTime orarioArrivo) {
+        this.orarioArrivo = orarioArrivo;
+    }
+
+    @Override
+    public String toString() {
+        return "Percorso{" +
+                "id=" + id +
+                ", orarioPartenza=" + orarioPartenza +
+                ", orarioArrivo=" + orarioArrivo +
+                ", mezzo=" + mezzo +
+                ", tratta=" + tratta +
+                '}';
     }
 }
