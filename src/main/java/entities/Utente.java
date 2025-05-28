@@ -5,6 +5,8 @@ import enumerated.Ruolo;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.StringJoiner;
+
 @Entity
 @Table(name = "utenti")
 public class Utente {
@@ -78,5 +80,19 @@ public class Utente {
 
     public void setAbbonamento(Abbonamento abbonamento) {
         this.abbonamento = abbonamento;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Utente{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", numeroTessera=" + numeroTessera +
+                ", biglietti=" + biglietti +
+                ", abbonamento=" + abbonamento +
+                ", ruolo=" + ruolo +
+                '}';
     }
 }

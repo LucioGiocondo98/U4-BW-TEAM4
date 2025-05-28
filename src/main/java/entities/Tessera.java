@@ -65,5 +65,15 @@ public class Tessera {
         this.attiva = true;
     }
 
+
+    @Override
+    public String toString() {
+        return "Tessera{" +
+                "id=" + id +
+                ", dataEmissione=" + dataEmissione +
+                ", dataScadenza=" + dataScadenza +
+                ", attiva=" + attiva +
+                '}';
+    }
 }
 

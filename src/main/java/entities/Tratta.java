@@ -55,5 +55,8 @@ public class Tratta {
     public void setCapolinea(String capolinea) {
         this.capolinea = capolinea;
     }
+
+
 }
+
 
