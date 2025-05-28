@@ -14,7 +14,7 @@ public class UtenteDAO {
         this.em = em;
     }
 
-    // Cerca un utente tramite id della tessera
+
     public Utente trovaPerNumeroTessera(long idTessera) {
         List<Utente> result = em.createQuery(
                         "SELECT u FROM Utente u WHERE u.numeroTessera.id = :idTessera", Utente.class)
