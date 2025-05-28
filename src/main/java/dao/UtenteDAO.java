@@ -64,4 +64,8 @@ public class UtenteDAO {
             e.printStackTrace();
         }
     }
+
+    public Utente getById(Long id) {
+        return em.find(Utente.class, id);
+    }
 }

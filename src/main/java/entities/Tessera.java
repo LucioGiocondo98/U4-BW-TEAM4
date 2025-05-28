@@ -17,8 +17,7 @@ public class Tessera {
     protected LocalDate dataScadenza;
     protected boolean attiva;
 
-    public Tessera(long id, LocalDate dataEmissione, boolean attiva) {
-        this.id = id;
+    public Tessera( LocalDate dataEmissione, boolean attiva) {
         this.dataEmissione = dataEmissione;
         this.dataScadenza = dataEmissione.plusYears(1);
         this.attiva = attiva;
