@@ -48,21 +48,20 @@ public class UtenteDAO {
 
     // Rinnova la tessera aggiornando dataEmissione e dataScadenza
     public void rinnovaTessera(Long idTessera) {
-        LocalDate oggi = LocalDate.now();
-        LocalDate scadenzaNuova = oggi.plusYears(1);
-
         try {
-            em.getTransaction().begin();
-            int updated = em.createQuery(
-                            "UPDATE Tessera t SET t.dataEmissione = :oggi, t.dataScadenza = :scadenzaNuova WHERE t.id = :idTessera")
-                    .setParameter("oggi", oggi)
-                    .setParameter("scadenzaNuova", scadenzaNuova)
-                    .setParameter("idTessera", idTessera)
-                    .executeUpdate();
-            em.getTransaction().commit();
+            Tessera tessera = em.find(Tessera.class, idTessera);
+            if (tessera != null) {
+                em.getTransaction().begin();
+                tessera.setDataEmissione(LocalDate.now());
+                tessera.setDataScadenza(LocalDate.now().plusYears(1));
+                em.getTransaction().commit();
+                System.out.println("Tessera rinnovata con successo.");
+            } else {
+                System.out.println("Tessera non trovata.");
+            }
         } catch (Exception e) {
             if (em.getTransaction().isActive()) em.getTransaction().rollback();
-            throw e;
+            e.printStackTrace();
         }
     }
 }
