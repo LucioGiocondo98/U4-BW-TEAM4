@@ -1,4 +1,4 @@
-package Dao;
+package dao;
 
 import entities.PuntoEmissione;
 import jakarta.persistence.EntityManager;
