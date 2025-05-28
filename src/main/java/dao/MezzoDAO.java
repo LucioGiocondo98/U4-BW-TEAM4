@@ -1,9 +1,8 @@
 package dao;
 
 import entities.Periodo;
-import entities.StatoMezzo;
+import enumerated.StatoMezzo;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;

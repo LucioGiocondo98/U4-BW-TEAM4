@@ -1,4 +1,4 @@
-package entities;
+package enumerated;
 
 public enum Validita {
     SETTIMANALE , MENSILE

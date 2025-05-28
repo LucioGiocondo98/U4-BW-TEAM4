@@ -1,6 +1,6 @@
 package entities;
 
-import Enumerated.StatoDistributore;
+import enumerated.StatoDistributore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 

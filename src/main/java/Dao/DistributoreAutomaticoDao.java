@@ -1,8 +1,7 @@
-package Dao;
+package dao;
 
-import Enumerated.StatoDistributore;
+import enumerated.StatoDistributore;
 import entities.DistributoreAutomatico;
-import entities.PuntoEmissione;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 

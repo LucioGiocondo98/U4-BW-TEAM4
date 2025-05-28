@@ -1,6 +1,7 @@
 package entities;
 
 
+import enumerated.StatoMezzo;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 

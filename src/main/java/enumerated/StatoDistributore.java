@@ -1,4 +1,4 @@
-package Enumerated;
+package enumerated;
 
 public enum StatoDistributore {
     ATTIVO,

@@ -1,5 +1,6 @@
 package entities;
 
+import enumerated.TipoMezzo;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
