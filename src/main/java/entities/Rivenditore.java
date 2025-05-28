@@ -9,10 +9,6 @@ public class Rivenditore extends PuntoEmissione{
 
     private String nome;
 
-    public Rivenditore(String nome) {
-        this.nome = nome;
-    }
-
     public Rivenditore(int id, List<TitoloDiViaggio> titoliEmissione, String nome) {
         super(id, titoliEmissione);
         this.nome = nome;

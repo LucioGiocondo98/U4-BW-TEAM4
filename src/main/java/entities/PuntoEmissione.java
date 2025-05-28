@@ -12,7 +12,7 @@ public abstract class PuntoEmissione {
     @GeneratedValue
     private int id;
 
-@OneToMany(mappedBy = "puntoEmissione_id")
+@OneToMany(mappedBy = "puntoEmissione")
     private List<TitoloDiViaggio> titoliEmissione;
 
     public PuntoEmissione() {
