@@ -21,6 +21,7 @@ public class Utente {
     @OneToMany(mappedBy = "utente")
     protected List<Biglietto> biglietti;
     @OneToOne
+    @JoinColumn(name = "abbonamento_id")
     protected Abbonamento abbonamento;
     @Enumerated(EnumType.STRING)
     protected Ruolo ruolo;
@@ -99,7 +100,7 @@ public class Utente {
         return password;
     }
 
-    public void setPasswordHash(String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 

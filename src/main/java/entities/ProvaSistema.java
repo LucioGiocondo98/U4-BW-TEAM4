@@ -165,7 +165,16 @@ public class ProvaSistema {
         System.out.print("Inserisci password: ");
         String password = scanner.nextLine();
 
-        Ruolo ruolo = Ruolo.GENERICO;
+        Ruolo ruolo = null;
+        while (ruolo == null) {
+            System.out.print("Scegli ruolo ( 1= GENERICO ||  2 = ADMIN): ");
+            int sceltaRuolo = scanner.nextInt();
+            switch (sceltaRuolo) {
+                case 1 -> ruolo = Ruolo.GENERICO;
+                case 2 -> ruolo = Ruolo.ADMIN;
+                default -> System.out.println("Scelta non valida. Inserisci 1 o 2.");
+            }
+        }
 
         try {
             em.getTransaction().begin();
