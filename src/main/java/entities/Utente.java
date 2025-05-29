@@ -24,13 +24,18 @@ public class Utente {
     protected Abbonamento abbonamento;
     @Enumerated(EnumType.STRING)
     protected Ruolo ruolo;
+    protected String email;
+    protected String password;
 
-    public Utente(String nome, String cognome, Tessera numeroTessera, Abbonamento abbonamento, Ruolo ruolo) {
+
+    public Utente(String nome, String cognome, Tessera numeroTessera, Abbonamento abbonamento, Ruolo ruolo,String email,String password) {
         this.nome = nome;
         this.cognome = cognome;
         this.numeroTessera = numeroTessera;
         this.abbonamento = abbonamento;
         this.ruolo = ruolo;
+        this.email= email;
+        this.password=password;
     }
     public Utente(){}
 
@@ -82,6 +87,29 @@ public class Utente {
         this.abbonamento = abbonamento;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPasswordHash(String password) {
+        this.password = password;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     @Override
     public String toString() {
@@ -93,6 +121,8 @@ public class Utente {
                 ", biglietti=" + biglietti +
                 ", abbonamento=" + abbonamento +
                 ", ruolo=" + ruolo +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

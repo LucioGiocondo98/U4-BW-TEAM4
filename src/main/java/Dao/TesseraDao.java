@@ -14,9 +14,7 @@ public class TesseraDao {
     }
 
     public void save(Tessera p){
-        em.getTransaction().begin();
         em.persist(p);
-        em.getTransaction().commit();
     }
 
     public Tessera getById(int id){

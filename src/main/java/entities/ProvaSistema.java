@@ -26,14 +26,15 @@ public class ProvaSistema {
         UtenteDAO utenteDAO = new UtenteDAO(em);
         Scanner scanner = new Scanner(System.in);
 
-        boolean running = true;
-        while (running) {
-            System.out.println("\n*** MENU SISTEMA ***");
-            System.out.println("1. Crea Utente");
-            System.out.println("2. Rinnova Tessera");
-            System.out.println("3. Visualizza Utente");
-            System.out.println("4. Verifica validità abbonamento (per tessera)");
-            System.out.println("5. Esci");
+        Utente loggedUser = null;
+
+        // MENU PRE-LOGIN
+        boolean preLoginRunning = true;
+        while (preLoginRunning) {
+            System.out.println("\n*** MENU PRE-LOGIN ***");
+            System.out.println("1. Login");
+            System.out.println("2. Crea nuovo utente");
+            System.out.println("3. Esci");
             System.out.print("Scelta: ");
 
             String input = scanner.nextLine();
@@ -46,11 +47,50 @@ public class ProvaSistema {
             }
 
             switch (scelta) {
-                case 1 -> creaUtente(scanner, em, utenteDAO, tesseraDao);
-                case 2 -> rinnovaTessera(scanner, utenteDAO);
-                case 3 -> visualizzaUtente(scanner, utenteDAO);
-                case 4 -> verificaAbbonamento(scanner, utenteDAO);
-                case 5 -> running = false;
+                case 1 -> {
+                    loggedUser = login(scanner, em);
+                    if (loggedUser != null) {
+                        preLoginRunning = false;
+                    } else {
+                        System.out.println("Login fallito, riprova.");
+                    }
+                }
+                case 2 -> creaUtente(scanner, em, utenteDAO, tesseraDao);
+                case 3 -> {
+                    System.out.println("Uscita dal programma.");
+                    scanner.close();
+                    em.close();
+                    emf.close();
+                    return;
+                }
+                default -> System.out.println("Scelta non valida.");
+            }
+        }
+
+        // MENU PRINCIPALE DOPO LOGIN
+        boolean running = true;
+        while (running) {
+            System.out.println("\n*** MENU SISTEMA ***");
+            System.out.println("1. Rinnova Tessera");
+            System.out.println("2. Visualizza Utente");
+            System.out.println("3. Verifica validità abbonamento (per tessera)");
+            System.out.println("4. Esci");
+            System.out.print("Scelta: ");
+
+            String input = scanner.nextLine();
+            int scelta;
+            try {
+                scelta = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Inserire un numero valido.");
+                continue;
+            }
+
+            switch (scelta) {
+                case 1 -> rinnovaTessera(scanner, utenteDAO);
+                case 2 -> visualizzaUtente(scanner, utenteDAO);
+                case 3 -> verificaAbbonamento(scanner, utenteDAO);
+                case 4 -> running = false;
                 default -> System.out.println("Scelta non valida.");
             }
         }
@@ -61,22 +101,71 @@ public class ProvaSistema {
         System.out.println("Sistema terminato.");
     }
 
-    private static void creaUtente(Scanner scanner, EntityManager em, UtenteDAO utenteDAO, TesseraDao tesseraDao) {
-        System.out.print("Inserisci nome: ");
-        String nome = scanner.nextLine();
+    private static Utente login(Scanner scanner, EntityManager em) {
+        System.out.println("*** LOGIN ***");
+        System.out.print("Email: ");
+        String email = scanner.nextLine().trim();
+        System.out.print("Password: ");
+        String password = scanner.nextLine();
 
-        System.out.print("Inserisci cognome: ");
-        String cognome = scanner.nextLine();
-
-        System.out.print("Inserisci ruolo (USER, ADMIN): ");
-        String ruoloInput = scanner.nextLine().trim().toUpperCase();
-        Ruolo ruolo;
         try {
-            ruolo = Ruolo.valueOf(ruoloInput);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Ruolo non valido. Imposto 'GENERIC' di default.");
-            ruolo = Ruolo.GENERICO;
+            Utente utente = em.createQuery("SELECT u FROM Utente u WHERE u.email = :email", Utente.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+
+            if (utente.getPassword().equals(password)) {  // semplice confronto per ora
+                System.out.println("Login effettuato con successo, benvenuto " + utente.getNome() +" " +utente.getId() + "!");
+                return utente;
+            } else {
+                System.out.println("Password errata.");
+            }
+        } catch (jakarta.persistence.NoResultException e) {
+            System.out.println("Email non trovata.");
+        } catch (Exception e) {
+            System.out.println("Errore durante il login: " + e.getMessage());
         }
+
+        return null;
+    }
+
+    private static void creaUtente(Scanner scanner, EntityManager em, UtenteDAO utenteDAO, TesseraDao tesseraDao) {
+        String nome;
+        while (true) {
+            System.out.print("Inserisci nome: ");
+            nome = scanner.nextLine();
+            if (nome.matches(".*\\d.*")) {
+                System.out.println("Il nome non può contenere numeri. Riprova.");
+            } else {
+                break;
+            }
+        }
+
+        String cognome;
+        while (true) {
+            System.out.print("Inserisci cognome: ");
+            cognome = scanner.nextLine();
+            if (cognome.matches(".*\\d.*")) {
+                System.out.println("Il cognome non può contenere numeri. Riprova.");
+            } else {
+                break;
+            }
+        }
+
+        String email;
+        while (true) {
+            System.out.print("Inserisci email: ");
+            email = scanner.nextLine().trim();
+            if (!email.matches("^[\\w.-]+@[\\w.-]+\\.\\w+$")) {
+                System.out.println("Email non valida, riprova.");
+            } else {
+                break;
+            }
+        }
+
+        System.out.print("Inserisci password: ");
+        String password = scanner.nextLine();
+
+        Ruolo ruolo = Ruolo.GENERICO;
 
         try {
             em.getTransaction().begin();
@@ -84,7 +173,7 @@ public class ProvaSistema {
             Tessera nuovaTessera = new Tessera(LocalDate.now(), true);
             tesseraDao.save(nuovaTessera);
 
-            Utente nuovoUtente = new Utente(nome, cognome, nuovaTessera, null, ruolo);
+            Utente nuovoUtente = new Utente(nome, cognome, nuovaTessera, null, ruolo, email, password);
             em.persist(nuovoUtente);
 
             em.getTransaction().commit();
@@ -137,5 +226,4 @@ public class ProvaSistema {
             System.out.println("ID tessera non valido.");
         }
     }
-        }
-
+}

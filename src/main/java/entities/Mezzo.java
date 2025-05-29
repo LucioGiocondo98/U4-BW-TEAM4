@@ -18,7 +18,9 @@ public class Mezzo {
     private int capienza;
     @OneToMany(mappedBy = "mezzo")
     private List<Periodo> periodi=new ArrayList<>();
-
+    @ManyToOne
+    @JoinColumn(name = "tratta_id")
+    private Tratta tratta;
     public Mezzo(){
     }
 
@@ -54,13 +56,20 @@ public class Mezzo {
     public List<Periodo> getPeriodi() {
         return periodi;
     }
+    public Tratta getTratta() {
+        return tratta;
+    }
 
+    public void setTratta(Tratta tratta) {
+        this.tratta = tratta;
+    }
     @Override
     public String toString() {
         return "Mezzo{" +
                 "id=" + id +
                 ", tipomezzo=" + tipomezzo +
                 ", capienza=" + capienza +
+                ", tratta=" + (tratta != null ? tratta.getId() : "null") +
                 '}';
     }
 }

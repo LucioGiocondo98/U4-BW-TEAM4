@@ -12,7 +12,6 @@ public class Tratta {
     private String zonaPartenza;
     private String capolinea;
     private int tempoPrevistoMinuti;
-
     @OneToMany(mappedBy = "tratta")
     private List<Mezzo> mezzi;
 
@@ -55,7 +54,6 @@ public class Tratta {
     public void setCapolinea(String capolinea) {
         this.capolinea = capolinea;
     }
-
 
 }
 
