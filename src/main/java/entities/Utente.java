@@ -1,11 +1,7 @@
 package entities;
-
-
 import enumerated.Ruolo;
 import jakarta.persistence.*;
-
 import java.util.List;
-import java.util.StringJoiner;
 
 @Entity
 @Table(name = "utenti")

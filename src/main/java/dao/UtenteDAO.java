@@ -3,6 +3,7 @@ package dao;
 import entities.Tessera;
 import entities.Utente;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -68,4 +69,39 @@ public class UtenteDAO {
     public Utente getById(Long id) {
         return em.find(Utente.class, id);
     }
+
+
+    public void creaUtente(Utente utente, TesseraDao tesseraDao) {
+        try {
+            em.getTransaction().begin();
+
+            Tessera tessera = new Tessera(LocalDate.now(), true);
+            tesseraDao.save(tessera);
+            utente.setNumeroTessera(tessera);
+
+            em.persist(utente);
+            em.getTransaction().commit();
+
+            System.out.println("Utente creato con successo:");
+            System.out.println(utente);
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            System.out.println("Errore durante la creazione dell'utente: " + e.getMessage());
+        }
+    }
+    public Utente login(String email, String password) {
+        try {
+            Utente utente = em.createQuery("SELECT u FROM Utente u WHERE u.email = :email", Utente.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+            if (utente.getPassword().equals(password)) {
+                return utente;
+            } else {
+                return null;
+            }
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
 }

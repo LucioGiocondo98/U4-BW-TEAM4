@@ -48,14 +48,21 @@ public class ProvaSistema {
 
             switch (scelta) {
                 case 1 -> {
-                    loggedUser = login(scanner, em);
+                    System.out.println("*** LOGIN ***");
+                    System.out.print("Email: ");
+                    String email = scanner.nextLine().trim();
+                    System.out.print("Password: ");
+                    String password = scanner.nextLine();
+
+                    loggedUser = utenteDAO.login(email, password);
                     if (loggedUser != null) {
+                        System.out.println("Login effettuato con successo, benvenuto " + loggedUser.getNome() + "!");
                         preLoginRunning = false;
                     } else {
                         System.out.println("Login fallito, riprova.");
                     }
                 }
-                case 2 -> creaUtente(scanner, em, utenteDAO, tesseraDao);
+                case 2 -> creaUtente(scanner, utenteDAO, tesseraDao);
                 case 3 -> {
                     System.out.println("Uscita dal programma.");
                     scanner.close();
@@ -101,34 +108,8 @@ public class ProvaSistema {
         System.out.println("Sistema terminato.");
     }
 
-    private static Utente login(Scanner scanner, EntityManager em) {
-        System.out.println("*** LOGIN ***");
-        System.out.print("Email: ");
-        String email = scanner.nextLine().trim();
-        System.out.print("Password: ");
-        String password = scanner.nextLine();
 
-        try {
-            Utente utente = em.createQuery("SELECT u FROM Utente u WHERE u.email = :email", Utente.class)
-                    .setParameter("email", email)
-                    .getSingleResult();
-
-            if (utente.getPassword().equals(password)) {  // semplice confronto per ora
-                System.out.println("Login effettuato con successo, benvenuto " + utente.getNome() +" " +utente.getId() + "!");
-                return utente;
-            } else {
-                System.out.println("Password errata.");
-            }
-        } catch (jakarta.persistence.NoResultException e) {
-            System.out.println("Email non trovata.");
-        } catch (Exception e) {
-            System.out.println("Errore durante il login: " + e.getMessage());
-        }
-
-        return null;
-    }
-
-    private static void creaUtente(Scanner scanner, EntityManager em, UtenteDAO utenteDAO, TesseraDao tesseraDao) {
+    private static void creaUtente(Scanner scanner, UtenteDAO utenteDAO, TesseraDao tesseraDao) {
         String nome;
         while (true) {
             System.out.print("Inserisci nome: ");
@@ -167,32 +148,22 @@ public class ProvaSistema {
 
         Ruolo ruolo = null;
         while (ruolo == null) {
-            System.out.print("Scegli ruolo ( 1= GENERICO ||  2 = ADMIN): ");
-            int sceltaRuolo = scanner.nextInt();
-            switch (sceltaRuolo) {
-                case 1 -> ruolo = Ruolo.GENERICO;
-                case 2 -> ruolo = Ruolo.ADMIN;
-                default -> System.out.println("Scelta non valida. Inserisci 1 o 2.");
+            System.out.print("Scegli ruolo ( 1= GENERICO ||  2 = AMMINISTRATORE): ");
+            String scelta = scanner.nextLine();
+            try {
+                int sceltaRuolo = Integer.parseInt(scelta);
+                switch (sceltaRuolo) {
+                    case 1 -> ruolo = Ruolo.GENERICO;
+                    case 2 -> ruolo = Ruolo.AMMINISTRATORE;
+                    default -> System.out.println("Scelta non valida. Inserisci 1 o 2.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Inserire un numero valido.");
             }
         }
 
-        try {
-            em.getTransaction().begin();
-
-            Tessera nuovaTessera = new Tessera(LocalDate.now(), true);
-            tesseraDao.save(nuovaTessera);
-
-            Utente nuovoUtente = new Utente(nome, cognome, nuovaTessera, null, ruolo, email, password);
-            em.persist(nuovoUtente);
-
-            em.getTransaction().commit();
-
-            System.out.println("Utente creato con successo:");
-            System.out.println(nuovoUtente);
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) em.getTransaction().rollback();
-            System.out.println("Errore durante la creazione dell'utente: " + e.getMessage());
-        }
+        Utente nuovoUtente = new Utente(nome, cognome, null, null, ruolo, email, password);
+        utenteDAO.creaUtente(nuovoUtente, tesseraDao);
     }
 
     private static void rinnovaTessera(Scanner scanner, UtenteDAO utenteDAO) {
