@@ -24,13 +24,13 @@ public class ProvaSistema {
         TitoloDiViaggioDAO titoloDiViaggioDAO = new TitoloDiViaggioDAO(em);
         TrattaDAO trattaDAO = new TrattaDAO(em);
         UtenteDAO utenteDAO = new UtenteDAO(em);
-        Utente admin = new Utente();
+       /* Utente admin = new Utente();
         admin.setNome("Team4");
         admin.setCognome("Epicode");
         admin.setEmail("team4@epicode.com");
         admin.setPassword("team4");
         admin.setRuolo(Ruolo.AMMINISTRATORE);
-        utenteDAO.salvaUtente(admin);
+        utenteDAO.salvaUtente(admin)*/
         Scanner scanner = new Scanner(System.in);
 
         Utente loggedUser = null;
@@ -92,36 +92,54 @@ public class ProvaSistema {
                 System.out.println("3. Visualizza tutti gli utenti");
                 System.out.println("4. Verifica validità abbonamento (per tessera)");
                 System.out.println("5. Esci");
-            } else {
-                System.out.println("1. Rinnova Tessera");
-                System.out.println("2. Visualizza i miei dati");
-                System.out.println("3. Verifica validità abbonamento (per tessera)");
-                System.out.println("4. Esci");
-            }
+                System.out.println("6. Elimina tutti gli utenti");
 
-            System.out.print("Scelta: ");
-            String input = scanner.nextLine();
-            int scelta;
-            try {
-                scelta = Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                System.out.println("Inserire un numero valido.");
-                continue;
-            }
+                System.out.print("Scelta: ");
+                String input = scanner.nextLine();
+                int scelta;
+                try {
+                    scelta = Integer.parseInt(input);
+                } catch (NumberFormatException e) {
+                    System.out.println("Inserire un numero valido.");
+                    continue;
+                }
 
-            if (loggedUser.getRuolo() == Ruolo.AMMINISTRATORE) {
                 switch (scelta) {
                     case 1 -> creaUtente(scanner, utenteDAO, tesseraDao);
                     case 2 -> rinnovaTessera(scanner, utenteDAO);
                     case 3 -> visualizzaTuttiGliUtenti(utenteDAO);
                     case 4 -> verificaAbbonamento(scanner, utenteDAO);
                     case 5 -> running = false;
+                    case 6 -> {
+                        System.out.print("Sei sicuro di voler eliminare TUTTI gli utenti? (s/n): ");
+                        String conferma = scanner.nextLine().trim().toLowerCase();
+                        if (conferma.equals("s")) {
+                            utenteDAO.eliminaTuttiGliUtenti();
+                        } else {
+                            System.out.println("Operazione annullata.");
+                        }
+                    }
                     default -> System.out.println("Scelta non valida.");
                 }
             } else {
+                System.out.println("1. Rinnova Tessera");
+                System.out.println("2. Visualizza i miei dati");
+                System.out.println("3. Verifica validità abbonamento (per tessera)");
+                System.out.println("4. Esci");
+
+                System.out.print("Scelta: ");
+                String input = scanner.nextLine();
+                int scelta;
+                try {
+                    scelta = Integer.parseInt(input);
+                } catch (NumberFormatException e) {
+                    System.out.println("Inserire un numero valido.");
+                    continue;
+                }
+
                 switch (scelta) {
                     case 1 -> rinnovaTessera(scanner, utenteDAO);
-                    case 2 -> visualizzaUtente(scanner,utenteDAO);
+                    case 2 -> visualizzaUtente(scanner, utenteDAO);
                     case 3 -> verificaAbbonamento(scanner, utenteDAO);
                     case 4 -> running = false;
                     default -> System.out.println("Scelta non valida.");
@@ -168,7 +186,7 @@ public class ProvaSistema {
         System.out.print("Inserisci password: ");
         String password = scanner.nextLine();
 
-        Ruolo ruolo = Ruolo.GENERICO; // Ruolo fisso
+        Ruolo ruolo = Ruolo.GENERICO;
 
         Utente nuovoUtente = new Utente(nome, cognome, null, null, ruolo, email, password);
         utenteDAO.creaUtente(nuovoUtente, tesseraDao);
