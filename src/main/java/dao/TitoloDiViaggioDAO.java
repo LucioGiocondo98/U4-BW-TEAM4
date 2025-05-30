@@ -54,4 +54,8 @@ public class TitoloDiViaggioDAO {
         return query.getResultList();
 
     }
+    public List<TitoloDiViaggio> getAllTitoli() {
+        return em.createQuery("SELECT t FROM TitoloDiViaggio t", TitoloDiViaggio.class).getResultList();
+    }
+
 }

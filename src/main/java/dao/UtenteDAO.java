@@ -1,6 +1,8 @@
 package dao;
 
+import entities.Biglietto;
 import entities.Tessera;
+import entities.TitoloDiViaggio;
 import entities.Utente;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -143,6 +145,38 @@ public class UtenteDAO {
             e.printStackTrace();
         }
     }
+    public boolean acquistaTitolo(Utente utente, TitoloDiViaggio titolo) {
+        try {
+            em.getTransaction().begin();
+
+            titolo.setUtente(utente);
+
+            List<Biglietto> biglietti = utente.getBiglietti();
+            if (biglietti != null && titolo instanceof Biglietto) {
+                biglietti.add((Biglietto) titolo);
+                utente.setBiglietti(biglietti);
+            }
+
+            if (em.contains(titolo)) {
+                em.merge(titolo);
+            } else {
+                em.persist(titolo);
+            }
+
+            em.merge(utente);
+
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            return false;
+        }
+    }
+
+
 
 }
 

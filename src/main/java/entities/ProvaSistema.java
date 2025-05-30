@@ -6,6 +6,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+
+
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -125,7 +127,9 @@ public class ProvaSistema {
                 System.out.println("1. Rinnova Tessera");
                 System.out.println("2. Visualizza i miei dati");
                 System.out.println("3. Verifica validità abbonamento (per tessera)");
-                System.out.println("4. Esci");
+                System.out.println("4. Acquista titolo di viaggio");
+                System.out.println("5. Esci");
+
 
                 System.out.print("Scelta: ");
                 String input = scanner.nextLine();
@@ -141,7 +145,9 @@ public class ProvaSistema {
                     case 1 -> rinnovaTessera(scanner, utenteDAO);
                     case 2 -> visualizzaUtente(scanner, utenteDAO);
                     case 3 -> verificaAbbonamento(scanner, utenteDAO);
-                    case 4 -> running = false;
+                    case 4 -> acquistaTitoloDiViaggio(scanner, titoloDiViaggioDAO, utenteDAO, loggedUser);
+
+                    case 5 -> running = false;
                     default -> System.out.println("Scelta non valida.");
                 }
             }
@@ -237,4 +243,39 @@ public class ProvaSistema {
         System.out.println("*** Elenco Utenti Registrati ***");
         utenteDAO.getAllUtenti().forEach(System.out::println);
     }
+    private static void acquistaTitoloDiViaggio(Scanner scanner, TitoloDiViaggioDAO titoloDiViaggioDAO, UtenteDAO utenteDAO, Utente utente) {
+        System.out.println("\n*** Acquisto Titolo di Viaggio ***");
+        var titoliDisponibili = titoloDiViaggioDAO.getAllTitoli();
+        if (titoliDisponibili.isEmpty()) {
+            System.out.println("Nessun titolo di viaggio disponibile al momento.");
+            return;
+        }
+        System.out.println("Titoli disponibili:");
+        for (int i = 0; i < titoliDisponibili.size(); i++) {
+            System.out.printf("%d. %s%n", i + 1, titoliDisponibili.get(i));
+        }
+
+        System.out.print("Seleziona il numero del titolo da acquistare: ");
+        int scelta;
+        try {
+            scelta = Integer.parseInt(scanner.nextLine());
+            if (scelta < 1 || scelta > titoliDisponibili.size()) {
+                System.out.println("Scelta non valida.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Inserisci un numero valido.");
+            return;
+        }
+
+        TitoloDiViaggio titoloSelezionato = titoliDisponibili.get(scelta - 1);
+        boolean successo = utenteDAO.acquistaTitolo(utente, titoloSelezionato);
+
+        if (successo) {
+            System.out.println("Acquisto effettuato con successo!");
+        } else {
+            System.out.println("Errore durante l'acquisto, riprova più tardi.");
+        }
+    }
+
 }

@@ -1,6 +1,8 @@
 package entities;
 import enumerated.Ruolo;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,6 +25,9 @@ public class Utente {
     protected Ruolo ruolo;
     protected String email;
     protected String password;
+    @OneToMany(mappedBy = "utente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TitoloDiViaggio> titoliDiViaggio= new ArrayList<>();
+
 
 
     public Utente(String nome, String cognome, Tessera numeroTessera, Abbonamento abbonamento, Ruolo ruolo,String email,String password) {
@@ -106,6 +111,23 @@ public class Utente {
 
     public void setId(Long id) {
         this.id = id;
+    }
+    public List<TitoloDiViaggio> getTitoliDiViaggio() {
+        return titoliDiViaggio;
+    }
+
+    public void setTitoliDiViaggio(List<TitoloDiViaggio> titoliDiViaggio) {
+        this.titoliDiViaggio = titoliDiViaggio;
+    }
+
+    // Metodo per aggiungere un titolo
+    public void addTitoloDiViaggio(TitoloDiViaggio titolo) {
+        this.titoliDiViaggio.add(titolo);
+        titolo.setUtente(this);  // importante per mantenere la relazione bidirezionale
+    }
+    public void removeTitoloDiViaggio(TitoloDiViaggio titolo) {
+        titoliDiViaggio.remove(titolo);
+        titolo.setUtente(null);
     }
 
     @Override
