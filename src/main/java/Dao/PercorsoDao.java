@@ -3,6 +3,7 @@ package dao;
 import entities.Percorso;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 
 public class PercorsoDao {
 
@@ -47,5 +48,15 @@ public class PercorsoDao {
             System.err.println("Errore durante l'eliminazione del percorso:");
             e.printStackTrace();
         }
+    }
+    public Double calcolaTempoMedioTrattaPerMezzo(Long idTratta, int idMezzo) {
+        TypedQuery<Double> query = em.createQuery(
+                "SELECT AVG(EXTRACT(EPOCH FROM (p.orarioArrivo - p.orarioPartenza)) / 60) " +
+                        "FROM Percorso p WHERE p.tratta.id = :trattaId AND p.mezzo.id = :mezzoId",
+                Double.class
+        );
+        query.setParameter("trattaId", idTratta);
+        query.setParameter("mezzoId", idMezzo);
+        return query.getSingleResult();
     }
 }
