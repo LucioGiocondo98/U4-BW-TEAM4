@@ -374,7 +374,7 @@ public class ProvaSistema {
             case "1":
                 System.out.print("Inserisci ID utente per il biglietto: ");
                 String idUtente = scanner.nextLine().trim();
-                Utente utente = utenteDAO.getById();
+                Utente utente = utenteDAO.getById(scanner.nextLong());
                 if (utente == null) {
                     System.out.println("Utente non trovato.");
                     return;
