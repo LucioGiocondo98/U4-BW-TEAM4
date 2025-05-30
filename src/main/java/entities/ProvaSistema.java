@@ -137,7 +137,7 @@ public class ProvaSistema {
                 System.out.println("2. Visualizza i miei dati");
                 System.out.println("3. Verifica validità abbonamento (per tessera)");
                 System.out.println("4. Acquista titolo di viaggio");
-                System.out.println("5. Prendi un autobus");
+                System.out.println("5. Prendi un mezzo");
                 System.out.println("6. Esci");
 
 
@@ -156,7 +156,7 @@ public class ProvaSistema {
                     case 2 -> visualizzaUtente(scanner, utenteDAO);
                     case 3 -> verificaAbbonamento(scanner, utenteDAO);
                     case 4 -> acquistaTitoloDiViaggio(scanner, titoloDiViaggioDAO, utenteDAO, loggedUser);
-                    case 5 ->prendiUnAutobus(scanner,mezzoDAO,loggedUser,utenteDAO);
+                    case 5 ->prendiUnmezzo(scanner,mezzoDAO,loggedUser,utenteDAO);
                     case 6 -> running = false;
                     default -> System.out.println("Scelta non valida.");
                 }
@@ -345,7 +345,7 @@ public class ProvaSistema {
         System.out.println("Mezzo creato con successo con ID: " + nuovoMezzo.getId());
     }
 
-    public static void prendiUnAutobus(Scanner scanner, MezzoDAO mezzoDAO, Utente loggedUtente, UtenteDAO utenteDAO){
+    public static void prendiUnmezzo(Scanner scanner, MezzoDAO mezzoDAO, Utente loggedUtente, UtenteDAO utenteDAO){
         List<Mezzo> mezzi=mezzoDAO.prendiTuttiMezzi();
         if (mezzi.isEmpty()){
             System.out.println("Non ci sono mezzi disponibili");
@@ -458,5 +458,4 @@ public class ProvaSistema {
         titoloDiViaggioDAO.aggiungiTitoloDiViaggio(nuovoTitolo);
         System.out.println("Titolo di viaggio aggiunto con successo!");
     }
-
-    }
+}
