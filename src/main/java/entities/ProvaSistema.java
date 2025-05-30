@@ -98,6 +98,7 @@ public class ProvaSistema {
                 System.out.println("6. Elimina tutti gli utenti");
                 System.out.println("7. Aggiungi titolo di viaggio");
                 System.out.println("8. Aggiungi tratta");
+                System.out.println("9. Crea Mezzo");
 
                 System.out.print("Scelta: ");
                 String input = scanner.nextLine();
@@ -319,14 +320,14 @@ public class ProvaSistema {
     private static void creaMezzo(Scanner scanner, MezzoDAO mezzoDAO) {
         System.out.println("\n*** Crea Nuovo Mezzo ***");
 
-        System.out.print("Inserisci tipo di mezzo (es. Autobus, Tram, Metro): ");
+        System.out.print("Inserisci tipo di mezzo (es. Autobus, Tram): ");
         String tipo = scanner.nextLine().trim();
 
         TipoMezzo tipoMezzoEnum;
         try {
             tipoMezzoEnum = TipoMezzo.valueOf(tipo.toUpperCase());
         } catch (IllegalArgumentException e) {
-            System.out.println("Tipo mezzo non valido. Usa: AUTOBUS, TRAM, METRO");
+            System.out.println("Tipo mezzo non valido. Usa: AUTOBUS, TRAM");
             return;  // Esci o riprova
         }
 
