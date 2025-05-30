@@ -5,10 +5,8 @@ import enumerated.Ruolo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-
-
-
-import java.time.LocalDate;
+import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class ProvaSistema {
@@ -122,7 +120,6 @@ public class ProvaSistema {
                             System.out.println("Operazione annullata.");
                         }
                     }
-                    case 7-> //aggiungi titolo da acquistare;
                     default -> System.out.println("Scelta non valida.");
                 }
             } else {
@@ -130,7 +127,8 @@ public class ProvaSistema {
                 System.out.println("2. Visualizza i miei dati");
                 System.out.println("3. Verifica validità abbonamento (per tessera)");
                 System.out.println("4. Acquista titolo di viaggio");
-                System.out.println("5. Esci");
+                System.out.println("5. Prendi un autobus");
+                System.out.println("6. Esci");
 
 
                 System.out.print("Scelta: ");
@@ -148,8 +146,8 @@ public class ProvaSistema {
                     case 2 -> visualizzaUtente(scanner, utenteDAO);
                     case 3 -> verificaAbbonamento(scanner, utenteDAO);
                     case 4 -> acquistaTitoloDiViaggio(scanner, titoloDiViaggioDAO, utenteDAO, loggedUser);
-
-                    case 5 -> running = false;
+                    case 5 ->prendiUnAutobus(scanner,mezzoDAO,loggedUser,utenteDAO);
+                    case 6 -> running = false;
                     default -> System.out.println("Scelta non valida.");
                 }
             }
@@ -277,6 +275,48 @@ public class ProvaSistema {
             System.out.println("Acquisto effettuato con successo!");
         } else {
             System.out.println("Errore durante l'acquisto, riprova più tardi.");
+        }
+    }
+
+    public static void prendiUnAutobus(Scanner scanner, MezzoDAO mezzoDAO, Utente loggedUtente, UtenteDAO utenteDAO){
+        List<Mezzo> mezzi=mezzoDAO.prendiTuttiMezzi();
+        if (mezzi.isEmpty()){
+            System.out.println("Non ci sono mezzi disponibili");
+        }else {
+            while (true) {
+                try {
+                    System.out.println("Scegli il mezzo da prendere");
+                    for (int i = 0; i < mezzi.size(); i++) {
+                        System.out.printf("%d. %s%n", i + 1, mezzi.get(i));
+                    }
+                    int scelta = scanner.nextInt();
+                    scanner.nextLine();
+                    if(scelta<1||scelta>mezzi.size()){
+                        System.err.println("Numero non valido inserisci un numero nel range");
+                    }else{
+                        Mezzo mezzoScelto=mezzi.get(scelta-1);
+                        List<Biglietto> bigliettiUtente=utenteDAO.getBigliettiNonVidimati(loggedUtente);
+                        if(utenteDAO.abbonamentoValidoPerNumeroTessera(loggedUtente.getNumeroTessera().getId())){
+                            System.out.println("Accesso consentito con abbonamento valido");
+                            return;
+                        } else if (!bigliettiUtente.isEmpty()) {
+                            System.out.println("Scelgi il biglietto da utilizzare:");
+                            for (int i = 0; i < bigliettiUtente.size(); i++) {
+                                System.out.println( bigliettiUtente.get(i));
+                            }
+                            System.out.println("seleziona l'id del biglietto che vuoi vidimare");
+                            Long idBiglietto=scanner.nextLong();
+                            scanner.nextLine();
+                            mezzoDAO.vidimaIlBiglietto(loggedUtente,mezzoScelto,idBiglietto);
+                            return;
+                        }else{
+                            System.out.println("Non hai ne biglietto ne abbonamento, vai a comprarlo");
+                        }
+                    }
+                }catch (InputMismatchException e){
+                    System.err.println("Hai inserito una stringa inserisci un numero");
+                }
+            }
         }
     }
 

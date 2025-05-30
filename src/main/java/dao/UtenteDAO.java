@@ -175,7 +175,11 @@ public class UtenteDAO {
             return false;
         }
     }
-
+    public List<Biglietto>getBigliettiNonVidimati(Utente utente){
+        TypedQuery<Biglietto> query=em.createQuery("SELECT b FROM Biglietto b WHERE b.vidimato= false AND b.utente= :utente", Biglietto.class);
+        query.setParameter("utente",utente);
+        return query.getResultList();
+    }
 
 
 }

@@ -24,7 +24,7 @@ public class Mezzo {
     public Mezzo(){
     }
 
-    public Mezzo( TipoMezzo tipomezzo, int capienza) {
+    public Mezzo( TipoMezzo tipomezzo) {
         this.tipomezzo = tipomezzo;
         switch (tipomezzo) {
             case AUTOBUS -> this.capienza = 50;
