@@ -116,5 +116,33 @@ public class UtenteDAO {
     public List<Utente> getAllUtenti() {
         return em.createQuery("SELECT u FROM Utente u", Utente.class).getResultList();
     }
+        public void eliminaUtente(Long id) {
+            Utente utente = getById(id);
+            if (utente != null) {
+                try {
+                    em.getTransaction().begin();
+                    em.remove(utente);
+                    em.getTransaction().commit();
+                } catch (Exception e) {
+                    em.getTransaction().rollback();
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("Utente con id " + id + " non trovato.");
+            }
+        }
+    public void eliminaTuttiGliUtenti() {
+        try {
+            em.getTransaction().begin();
+            int deletedCount = em.createQuery("DELETE FROM Utente").executeUpdate();
+            em.getTransaction().commit();
+            System.out.println("Eliminati " + deletedCount + " utenti.");
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.out.println("Errore durante l'eliminazione degli utenti.");
+            e.printStackTrace();
+        }
+    }
+
 }
 
