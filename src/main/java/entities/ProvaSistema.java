@@ -168,31 +168,10 @@ public class ProvaSistema {
         System.out.print("Inserisci password: ");
         String password = scanner.nextLine();
 
-        Ruolo ruolo = null;
-        while (ruolo == null) {
-            System.out.print("Scegli ruolo (1 = GENERICO, 2 = AMMINISTRATORE): ");
-            String scelta = scanner.nextLine();
-            try {
-                int sceltaRuolo = Integer.parseInt(scelta);
-                switch (sceltaRuolo) {
-                    case 1 -> ruolo = Ruolo.GENERICO;
-                    case 2 -> ruolo = Ruolo.AMMINISTRATORE;
-                    default -> System.out.println("Scelta non valida. Inserisci 1 o 2.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Inserire un numero valido.");
-            }
-        }
+        Ruolo ruolo = Ruolo.GENERICO; // Ruolo fisso
 
-        Utente nuovoUtente = new Utente();
-        nuovoUtente.setNome(nome);
-        nuovoUtente.setCognome(cognome);
-        nuovoUtente.setEmail(email);
-        nuovoUtente.setPassword(password);
-        nuovoUtente.setRuolo(ruolo);
-
+        Utente nuovoUtente = new Utente(nome, cognome, null, null, ruolo, email, password);
         utenteDAO.creaUtente(nuovoUtente, tesseraDao);
-        System.out.println("Utente creato con successo!");
     }
 
 
