@@ -19,6 +19,7 @@ public  abstract  class TitoloDiViaggio {
 
 
 
+
     public TitoloDiViaggio(String codiceUnivoco, LocalDate dataEmissione) {
         this.codiceUnivoco = codiceUnivoco;
         this.dataEmissione = dataEmissione;

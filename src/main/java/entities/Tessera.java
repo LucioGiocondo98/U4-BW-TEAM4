@@ -1,9 +1,6 @@
 package entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 @Entity
@@ -16,6 +13,7 @@ public class Tessera {
      @Column(name = "data_di_scadenza")
     protected LocalDate dataScadenza;
     protected boolean attiva;
+
 
     public Tessera( LocalDate dataEmissione, boolean attiva) {
         this.dataEmissione = dataEmissione;
