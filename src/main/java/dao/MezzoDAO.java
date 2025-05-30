@@ -31,23 +31,26 @@ public class MezzoDAO {
         return query.getResultList();
     }
 
-    public void vidimaIlBiglietto(Utente utente, Mezzo mezzo){
-        TypedQuery<Biglietto> query=em.createQuery("SELECT b FROM Biglietto b WHERE b.utente_id = :utente AND b.vidimato= false", Biglietto.class);
-        query.setParameter("utente", utente);
-        query.setMaxResults(1);
-        List<Biglietto> risultati = query.getResultList();
+    public void vidimaIlBiglietto(Utente utente, Mezzo mezzo,Long idBiglietto){
+        Biglietto biglietto = em.find(Biglietto.class, idBiglietto);
 
-        if (risultati.isEmpty()){
-            System.out.println("Nessun biglietto trovao per l'utente: " + utente );
-        }else{
-            Biglietto biglietto = risultati.getFirst();
-            em.getTransaction().begin();
-            biglietto.setVidimato(true);
-            biglietto.setDataVidimazione(LocalDate.now());
-            biglietto.setMezzo(mezzo);
-            em.getTransaction().commit();
-            System.out.println("Biglietto vidimato: " + biglietto);
+        if (biglietto == null || !biglietto.getUtente().equals(utente)) {
+            System.out.println("Biglietto non trovato o non appartiene all'utente.");
+            return;
         }
+
+        if (biglietto.isVidimato()) {
+            System.out.println("Il biglietto è già stato vidimato.");
+            return;
+        }
+
+        em.getTransaction().begin();
+        biglietto.setVidimato(true);
+        biglietto.setDataVidimazione(LocalDate.now());
+        biglietto.setMezzo(mezzo);
+        em.getTransaction().commit();
+
+        System.out.println("Biglietto vidimato correttamente: " + biglietto);
     }
 
     public List<Biglietto> prendiBigliettiDaMezzo(Mezzo mezzo){
@@ -61,6 +64,12 @@ public class MezzoDAO {
         query.setParameter("data",data);
         return query.getResultList();
     }
+
+    public List<Mezzo> prendiTuttiMezzi(){
+        TypedQuery<Mezzo> query=em.createQuery("SELECT m FROM Mezzo m ",Mezzo.class);
+        return query.getResultList();
+    }
+
     public void creaMezzo(Mezzo mezzo) {
         em.getTransaction().begin();
         em.persist(mezzo);
