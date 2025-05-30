@@ -17,8 +17,6 @@ public class PeriodoDAO {
         em.getTransaction().commit();
     }
 
-
-
     public Periodo findPeriodo(int id){
         return em.find(Periodo.class,id);
     }

@@ -12,11 +12,16 @@ public class Biglietto extends TitoloDiViaggio{
     @ManyToOne
     @JoinColumn(name ="utente_id" )
    private Utente utente;
+    @ManyToOne
+    @JoinColumn(name = "mezzo_id")
+    private Mezzo mezzo;
 
-    public Biglietto(String codiceUnivoco, LocalDate dataEmissione, boolean vidimato, LocalDate dataVidimazione) {
+    public Biglietto(String codiceUnivoco, LocalDate dataEmissione, Utente utente) {
         super(codiceUnivoco, dataEmissione);
-        this.vidimato = vidimato;
-        this.dataVidimazione = dataVidimazione;
+        this.vidimato = false;
+        this.dataVidimazione = null;
+        this.utente = utente;
+        this.mezzo = null;
     }
 
     public Biglietto() {
@@ -38,11 +43,29 @@ public class Biglietto extends TitoloDiViaggio{
         this.dataVidimazione = dataVidimazione;
     }
 
+    public Utente getUtente() {
+        return utente;
+    }
+
+    public void setUtente(Utente utente) {
+        this.utente = utente;
+    }
+
+    public Mezzo getMezzo() {
+        return mezzo;
+    }
+
+    public void setMezzo(Mezzo mezzo) {
+        this.mezzo = mezzo;
+    }
+
     @Override
     public String toString() {
         return "Biglietto{" +
                 "vidimato=" + vidimato +
                 ", dataVidimazione=" + dataVidimazione +
+                ", utente=" + utente +
+                ", mezzo=" + mezzo +
                 '}';
     }
 }
