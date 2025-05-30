@@ -5,6 +5,7 @@ import entities.Mezzo;
 import entities.Periodo;
 import entities.Utente;
 import enumerated.StatoMezzo;
+import enumerated.TipoMezzo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
@@ -59,5 +60,10 @@ public class MezzoDAO {
         TypedQuery<Biglietto> query=em.createQuery("SELECT b FROM Biglietto b WHERE b.dataVidimazione= :data AND b.vidimato= true", Biglietto.class);
         query.setParameter("data",data);
         return query.getResultList();
+    }
+    public void creaMezzo(Mezzo mezzo) {
+        em.getTransaction().begin();
+        em.persist(mezzo);
+        em.getTransaction().commit();
     }
 }

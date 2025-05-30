@@ -2,6 +2,7 @@ package entities;
 
 import dao.*;
 import enumerated.Ruolo;
+import enumerated.TipoMezzo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -123,8 +124,10 @@ public class ProvaSistema {
                             System.out.println("Operazione annullata.");
                         }
                     }
-                    case 7-> //aggiungi titolo da acquistare;
+
                     case 8 -> aggiungiTratta(scanner, trattaDAO);
+                    case 9 ->creaMezzo(scanner,mezzoDAO);
+
                     default -> System.out.println("Scelta non valida.");
                 }
             } else {
@@ -312,6 +315,27 @@ public class ProvaSistema {
 
         trattaDAO.save(nuovaTratta);
         System.out.println("Tratta aggiunta con successo! ID generato: " + nuovaTratta.getId());
+    }
+    private static void creaMezzo(Scanner scanner, MezzoDAO mezzoDAO) {
+        System.out.println("\n*** Crea Nuovo Mezzo ***");
+
+        System.out.print("Inserisci tipo di mezzo (es. Autobus, Tram, Metro): ");
+        String tipo = scanner.nextLine().trim();
+
+        TipoMezzo tipoMezzoEnum;
+        try {
+            tipoMezzoEnum = TipoMezzo.valueOf(tipo.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Tipo mezzo non valido. Usa: AUTOBUS, TRAM, METRO");
+            return;  // Esci o riprova
+        }
+
+        Mezzo nuovoMezzo = new Mezzo();
+        nuovoMezzo.setTipomezzo(tipoMezzoEnum);
+
+        mezzoDAO.creaMezzo(nuovoMezzo);
+
+        System.out.println("Mezzo creato con successo con ID: " + nuovoMezzo.getId());
     }
 
 }
