@@ -96,6 +96,7 @@ public class ProvaSistema {
                 System.out.println("5. Esci");
                 System.out.println("6. Elimina tutti gli utenti");
                 System.out.println("7. Aggiungi titolo di viaggio");
+                System.out.println("8. Aggiungi tratta");
 
                 System.out.print("Scelta: ");
                 String input = scanner.nextLine();
@@ -123,6 +124,7 @@ public class ProvaSistema {
                         }
                     }
                     case 7-> //aggiungi titolo da acquistare;
+                    case 8 -> aggiungiTratta(scanner, trattaDAO);
                     default -> System.out.println("Scelta non valida.");
                 }
             } else {
@@ -278,6 +280,38 @@ public class ProvaSistema {
         } else {
             System.out.println("Errore durante l'acquisto, riprova più tardi.");
         }
+    }
+    private static void aggiungiTratta(Scanner scanner, TrattaDAO trattaDAO) {
+        System.out.println("\n*** Aggiungi Nuova Tratta ***");
+
+        System.out.print("Inserisci zona di partenza: ");
+        String zonaPartenza = scanner.nextLine().trim();
+
+        System.out.print("Inserisci capolinea: ");
+        String capolinea = scanner.nextLine().trim();
+
+        int tempoPrevisto;
+        while (true) {
+            System.out.print("Inserisci tempo previsto di percorrenza (in minuti): ");
+            try {
+                tempoPrevisto = Integer.parseInt(scanner.nextLine());
+                if (tempoPrevisto <= 0) {
+                    System.out.println("Il tempo deve essere maggiore di 0.");
+                } else {
+                    break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Inserisci un numero valido.");
+            }
+        }
+
+        Tratta nuovaTratta = new Tratta();
+        nuovaTratta.setZonaPartenza(zonaPartenza);
+        nuovaTratta.setCapolinea(capolinea);
+        nuovaTratta.setTempoPrevistoMinuti(tempoPrevisto);
+
+        trattaDAO.save(nuovaTratta);
+        System.out.println("Tratta aggiunta con successo! ID generato: " + nuovaTratta.getId());
     }
 
 }
