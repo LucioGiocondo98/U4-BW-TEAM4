@@ -4,6 +4,7 @@ import entities.Tessera;
 import entities.Utente;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,7 +16,11 @@ public class UtenteDAO {
         this.em = em;
     }
 
-
+    public void salvaUtente(Utente utente) {
+        em.getTransaction().begin();
+        em.persist(utente);
+        em.getTransaction().commit();
+    }
     public Utente trovaPerNumeroTessera(long idTessera) {
         List<Utente> result = em.createQuery(
                         "SELECT u FROM Utente u WHERE u.numeroTessera.id = :idTessera", Utente.class)
@@ -103,5 +108,13 @@ public class UtenteDAO {
             return null;
         }
     }
-
+    public boolean emailEsiste(String email) {
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(u) FROM Utente u WHERE u.email = :email", Long.class);
+        query.setParameter("email", email);
+        return query.getSingleResult() > 0;
+    }
+    public List<Utente> getAllUtenti() {
+        return em.createQuery("SELECT u FROM Utente u", Utente.class).getResultList();
+    }
 }
+

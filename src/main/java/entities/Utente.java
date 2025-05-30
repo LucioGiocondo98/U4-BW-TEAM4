@@ -122,4 +122,13 @@ public class Utente {
                 ", password='" + password + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Utente)) return false;
+        Utente utente = (Utente) o;
+        return id != null && id.equals(utente.id);
+    }
 }
+
