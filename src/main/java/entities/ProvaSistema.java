@@ -388,7 +388,7 @@ public class ProvaSistema {
                 nuovoTitolo.setDataEmissione(dataEmissione);
                 break;
 
-            case "2":  // Abbonamento
+            case "2":
                 System.out.print("Inserisci validità (esempio: MENSILE, ANNUALE): ");
                 String validitaStr = scanner.nextLine().trim().toUpperCase();
 
