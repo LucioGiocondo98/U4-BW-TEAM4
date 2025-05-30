@@ -95,6 +95,7 @@ public class ProvaSistema {
                 System.out.println("4. Verifica validità abbonamento (per tessera)");
                 System.out.println("5. Esci");
                 System.out.println("6. Elimina tutti gli utenti");
+                System.out.println("7. Aggiungi titolo di viaggio");
 
                 System.out.print("Scelta: ");
                 String input = scanner.nextLine();
@@ -121,6 +122,7 @@ public class ProvaSistema {
                             System.out.println("Operazione annullata.");
                         }
                     }
+                    case 7-> //aggiungi titolo da acquistare;
                     default -> System.out.println("Scelta non valida.");
                 }
             } else {
