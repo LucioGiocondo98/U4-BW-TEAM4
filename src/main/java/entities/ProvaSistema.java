@@ -2,6 +2,7 @@ package entities;
 
 import dao.*;
 import enumerated.Ruolo;
+import enumerated.TipoMezzo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -94,6 +95,7 @@ public class ProvaSistema {
                 System.out.println("5. Esci");
                 System.out.println("6. Elimina tutti gli utenti");
                 System.out.println("7. Aggiungi titolo di viaggio");
+                System.out.println("8. Aggiungi tratta");
 
                 System.out.print("Scelta: ");
                 String input = scanner.nextLine();
@@ -120,6 +122,10 @@ public class ProvaSistema {
                             System.out.println("Operazione annullata.");
                         }
                     }
+                    case 7 -> aggiungiTitoloDiViaggio(scanner, titoloDiViaggioDAO);
+                    case 8 -> aggiungiTratta(scanner, trattaDAO);
+                    case 9 ->creaMezzo(scanner,mezzoDAO);
+
                     default -> System.out.println("Scelta non valida.");
                 }
             } else {
@@ -277,6 +283,59 @@ public class ProvaSistema {
             System.out.println("Errore durante l'acquisto, riprova più tardi.");
         }
     }
+    private static void aggiungiTratta(Scanner scanner, TrattaDAO trattaDAO) {
+        System.out.println("\n*** Aggiungi Nuova Tratta ***");
+
+        System.out.print("Inserisci zona di partenza: ");
+        String zonaPartenza = scanner.nextLine().trim();
+
+        System.out.print("Inserisci capolinea: ");
+        String capolinea = scanner.nextLine().trim();
+
+        int tempoPrevisto;
+        while (true) {
+            System.out.print("Inserisci tempo previsto di percorrenza (in minuti): ");
+            try {
+                tempoPrevisto = Integer.parseInt(scanner.nextLine());
+                if (tempoPrevisto <= 0) {
+                    System.out.println("Il tempo deve essere maggiore di 0.");
+                } else {
+                    break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Inserisci un numero valido.");
+            }
+        }
+
+        Tratta nuovaTratta = new Tratta();
+        nuovaTratta.setZonaPartenza(zonaPartenza);
+        nuovaTratta.setCapolinea(capolinea);
+        nuovaTratta.setTempoPrevistoMinuti(tempoPrevisto);
+
+        trattaDAO.save(nuovaTratta);
+        System.out.println("Tratta aggiunta con successo! ID generato: " + nuovaTratta.getId());
+    }
+    private static void creaMezzo(Scanner scanner, MezzoDAO mezzoDAO) {
+        System.out.println("\n*** Crea Nuovo Mezzo ***");
+
+        System.out.print("Inserisci tipo di mezzo (es. Autobus, Tram, Metro): ");
+        String tipo = scanner.nextLine().trim();
+
+        TipoMezzo tipoMezzoEnum;
+        try {
+            tipoMezzoEnum = TipoMezzo.valueOf(tipo.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Tipo mezzo non valido. Usa: AUTOBUS, TRAM, METRO");
+            return;  // Esci o riprova
+        }
+
+        Mezzo nuovoMezzo = new Mezzo();
+        nuovoMezzo.setTipomezzo(tipoMezzoEnum);
+
+        mezzoDAO.creaMezzo(nuovoMezzo);
+
+        System.out.println("Mezzo creato con successo con ID: " + nuovoMezzo.getId());
+    }
 
     public static void prendiUnAutobus(Scanner scanner, MezzoDAO mezzoDAO, Utente loggedUtente, UtenteDAO utenteDAO){
         List<Mezzo> mezzi=mezzoDAO.prendiTuttiMezzi();
@@ -320,4 +379,38 @@ public class ProvaSistema {
         }
     }
 
+    private static void aggiungiTitoloDiViaggio(Scanner scanner, TitoloDiViaggioDAO titoloDiViaggioDAO) {
+        System.out.println("\n*** Aggiungi Nuovo Titolo di Viaggio ***");
+
+        System.out.print("Inserisci codice univoco: ");
+        String codice = scanner.nextLine().trim();
+
+
+        if (titoloDiViaggioDAO.trovaTitoloDiViaggioPerId(codice) != null) {
+            System.out.println("Errore: codice univoco già presente.");
+            return;
+        }
+
+        System.out.print("Inserisci data emissione (YYYY-MM-DD): ");
+        String dataInput = scanner.nextLine().trim();
+        LocalDate dataEmissione;
+        try {
+            dataEmissione = LocalDate.parse(dataInput);
+        } catch (Exception e) {
+            System.out.println("Formato data non valido.");
+            return;
+        }
+
+
+        TitoloDiViaggio nuovoTitolo = new TitoloDiViaggio() {
+            {
+                setCodiceUnivoco(codice);
+                setDataEmissione(dataEmissione);
+            }
+        };
+
+
+        titoloDiViaggioDAO.aggiungiTitoloDiViaggio(nuovoTitolo);
+        System.out.println("Titolo di viaggio aggiunto con successo!");
+    }
 }

@@ -49,6 +49,10 @@ public class Mezzo {
         this.tipomezzo = tipomezzo;
     }
 
+    public void setCapienza(int capienza) {
+        this.capienza = capienza;
+    }
+
     public int getCapienza() {
         return capienza;
     }
