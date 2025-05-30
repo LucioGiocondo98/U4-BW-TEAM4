@@ -66,7 +66,7 @@ public class ProvaSistema {
 
                     loggedUser = utenteDAO.login(email, password);
                     if (loggedUser != null) {
-                        System.out.println("Login effettuato con successo, benvenuto " + loggedUser.getNome() + "!");
+                        System.out.println("Login effettuato con successo, benvenuto " + loggedUser.getNome() + "-" +"id: "+ loggedUser.id+ "!");
                         preLoginRunning = false;
                     } else {
                         System.out.println("Login fallito, riprova.");
@@ -98,6 +98,7 @@ public class ProvaSistema {
                 System.out.println("6. Elimina tutti gli utenti");
                 System.out.println("7. Aggiungi titolo di viaggio");
                 System.out.println("8. Aggiungi tratta");
+                System.out.println("9. Crea Mezzo");
 
                 System.out.print("Scelta: ");
                 String input = scanner.nextLine();
@@ -124,7 +125,6 @@ public class ProvaSistema {
                             System.out.println("Operazione annullata.");
                         }
                     }
-
                     case 8 -> aggiungiTratta(scanner, trattaDAO);
                     case 9 ->creaMezzo(scanner,mezzoDAO);
 
@@ -319,23 +319,22 @@ public class ProvaSistema {
     private static void creaMezzo(Scanner scanner, MezzoDAO mezzoDAO) {
         System.out.println("\n*** Crea Nuovo Mezzo ***");
 
-        System.out.print("Inserisci tipo di mezzo (es. Autobus, Tram, Metro): ");
+        System.out.print("Inserisci tipo di mezzo (es. Autobus, Tram): ");
         String tipo = scanner.nextLine().trim();
 
         TipoMezzo tipoMezzoEnum;
         try {
             tipoMezzoEnum = TipoMezzo.valueOf(tipo.toUpperCase());
         } catch (IllegalArgumentException e) {
-            System.out.println("Tipo mezzo non valido. Usa: AUTOBUS, TRAM, METRO");
-            return;  // Esci o riprova
+            System.out.println("Tipo mezzo non valido. Usa: AUTOBUS, TRAM");
+            return;
         }
 
         Mezzo nuovoMezzo = new Mezzo();
         nuovoMezzo.setTipomezzo(tipoMezzoEnum);
-
         mezzoDAO.creaMezzo(nuovoMezzo);
-
         System.out.println("Mezzo creato con successo con ID: " + nuovoMezzo.getId());
     }
+
 
 }

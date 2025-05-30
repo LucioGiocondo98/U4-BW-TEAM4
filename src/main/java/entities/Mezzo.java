@@ -24,7 +24,7 @@ public class Mezzo {
     public Mezzo(){
     }
 
-    public Mezzo( TipoMezzo tipomezzo, int capienza) {
+    public Mezzo( TipoMezzo tipomezzo) {
         this.tipomezzo = tipomezzo;
         switch (tipomezzo) {
             case AUTOBUS -> this.capienza = 50;
@@ -47,6 +47,10 @@ public class Mezzo {
 
     public void setTipomezzo(TipoMezzo tipomezzo) {
         this.tipomezzo = tipomezzo;
+    }
+
+    public void setCapienza(int capienza) {
+        this.capienza = capienza;
     }
 
     public int getCapienza() {
