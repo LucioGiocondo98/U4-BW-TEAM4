@@ -1,5 +1,5 @@
 package enumerated;
 
 public enum StatoMezzo {
-    In_Manutenzione, In_Attività
+    IN_MANUTENZIONE, IN_ATTIVITA
 }
