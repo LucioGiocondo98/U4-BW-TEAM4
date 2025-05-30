@@ -3,6 +3,7 @@ package entities;
 import dao.*;
 import enumerated.Ruolo;
 import enumerated.TipoMezzo;
+import enumerated.Validita;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -125,9 +126,9 @@ public class ProvaSistema {
                             System.out.println("Operazione annullata.");
                         }
                     }
-                    case 7 -> aggiungiTitoloDiViaggio(scanner, titoloDiViaggioDAO);
+                    case 7 -> aggiungiTitoloDiViaggio(scanner, titoloDiViaggioDAO,utenteDAO);
                     case 8 -> aggiungiTratta(scanner, trattaDAO);
-                    case 9 ->creaMezzo(scanner,mezzoDAO);
+                    case 9 -> creaMezzo(scanner, mezzoDAO);
 
                     default -> System.out.println("Scelta non valida.");
                 }
@@ -247,10 +248,12 @@ public class ProvaSistema {
             System.out.println("ID tessera non valido.");
         }
     }
+
     private static void visualizzaTuttiGliUtenti(UtenteDAO utenteDAO) {
         System.out.println("*** Elenco Utenti Registrati ***");
         utenteDAO.getAllUtenti().forEach(System.out::println);
     }
+
     private static void acquistaTitoloDiViaggio(Scanner scanner, TitoloDiViaggioDAO titoloDiViaggioDAO, UtenteDAO utenteDAO, Utente utente) {
         System.out.println("\n*** Acquisto Titolo di Viaggio ***");
         var titoliDisponibili = titoloDiViaggioDAO.getAllTitoli();
@@ -285,6 +288,7 @@ public class ProvaSistema {
             System.out.println("Errore durante l'acquisto, riprova più tardi.");
         }
     }
+
     private static void aggiungiTratta(Scanner scanner, TrattaDAO trattaDAO) {
         System.out.println("\n*** Aggiungi Nuova Tratta ***");
 
@@ -317,6 +321,7 @@ public class ProvaSistema {
         trattaDAO.save(nuovaTratta);
         System.out.println("Tratta aggiunta con successo! ID generato: " + nuovaTratta.getId());
     }
+
     private static void creaMezzo(Scanner scanner, MezzoDAO mezzoDAO) {
         System.out.println("\n*** Crea Nuovo Mezzo ***");
 
@@ -339,13 +344,12 @@ public class ProvaSistema {
         System.out.println("Mezzo creato con successo con ID: " + nuovoMezzo.getId());
     }
 
-    private static void aggiungiTitoloDiViaggio(Scanner scanner, TitoloDiViaggioDAO titoloDiViaggioDAO) {
+    private static void aggiungiTitoloDiViaggio(Scanner scanner, TitoloDiViaggioDAO titoloDiViaggioDAO, UtenteDAO utenteDAO) {
         System.out.println("\n*** Aggiungi Nuovo Titolo di Viaggio ***");
 
         System.out.print("Inserisci codice univoco: ");
         String codice = scanner.nextLine().trim();
 
-      
         if (titoloDiViaggioDAO.trovaTitoloDiViaggioPerId(codice) != null) {
             System.out.println("Errore: codice univoco già presente.");
             return;
@@ -361,15 +365,51 @@ public class ProvaSistema {
             return;
         }
 
+        System.out.print("Scegli tipo titolo (1 = Biglietto, 2 = Abbonamento): ");
+        String scelta = scanner.nextLine().trim();
 
-        TitoloDiViaggio nuovoTitolo = new TitoloDiViaggio() {
-            {
-                setCodiceUnivoco(codice);
-                setDataEmissione(dataEmissione);
-            }
-        };
+        TitoloDiViaggio nuovoTitolo = null;
 
+        switch (scelta) {
+            case "1":
+                System.out.print("Inserisci ID utente per il biglietto: ");
+                String idUtente = scanner.nextLine().trim();
+                Utente utente = utenteDAO.getById();
+                if (utente == null) {
+                    System.out.println("Utente non trovato.");
+                    return;
+                }
 
+                nuovoTitolo = new Biglietto();
+                ((Biglietto) nuovoTitolo).setUtente(utente);
+                ((Biglietto) nuovoTitolo).setVidimato(false);
+                ((Biglietto) nuovoTitolo).setDataVidimazione(null);
+                nuovoTitolo.setCodiceUnivoco(codice);
+                nuovoTitolo.setDataEmissione(dataEmissione);
+                break;
+
+            case "2":  // Abbonamento
+                System.out.print("Inserisci validità (esempio: MENSILE, ANNUALE): ");
+                String validitaStr = scanner.nextLine().trim().toUpperCase();
+
+                Validita validitaEnum;
+                try {
+                    validitaEnum = Validita.valueOf(validitaStr);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Validità non valida. Usa: MENSILE, ANNUALE, ecc.");
+                    return;
+                }
+
+                nuovoTitolo = new Abbonamento();
+                ((Abbonamento) nuovoTitolo).setValidita(validitaEnum);
+                nuovoTitolo.setCodiceUnivoco(codice);
+                nuovoTitolo.setDataEmissione(dataEmissione);
+                break;
+
+            default:
+                System.out.println("Scelta non valida.");
+                return;
+        }
         titoloDiViaggioDAO.aggiungiTitoloDiViaggio(nuovoTitolo);
         System.out.println("Titolo di viaggio aggiunto con successo!");
     }
